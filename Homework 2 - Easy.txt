@@ -1,0 +1,38 @@
+Sub easy()
+
+'Set initial variables
+Dim ticker As String
+Dim vol As Double
+vol = 0
+
+Dim summary_table_row As Integer
+summary_table_row = 2
+
+Dim year_open As Double
+Dim year_close As Double
+
+'Assign cells
+Cells(1, 9).Value = "ticker"
+Cells(1, 10).Value = "total_volume"
+
+    'Loop through all dates
+    For d = 2 To 113960
+        If year_open = 0 Then
+            year_open = Cells(d, 3).Value
+        End If
+        
+        If Cells(d - 1, 1).Value = Cells(d, 1).Value And Cells(d + 1, 1).Value <> Cells(d, 1).Value Then
+            year_close = Cells(d, 6).Value
+            ticker = Cells(d, 1).Value
+            vol = vol + Cells(d, 7).Value
+            Range("I" & summary_table_row).Value = ticker
+            Range("J" & summary_table_row).Value = vol
+            summary_table_row = summary_table_row + 1
+            vol = 0
+        Else
+            vol = vol + Cells(d, 7).Value
+        End If
+    
+    Next d
+
+End Sub
