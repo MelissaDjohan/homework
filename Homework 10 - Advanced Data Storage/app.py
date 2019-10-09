@@ -41,7 +41,7 @@ def welcome():
 
 
 @app.route("/api/v1.0/precipitation")
-def scores(precipitation):
+def precipitation():
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
@@ -51,10 +51,7 @@ def scores(precipitation):
 
     session.close()
 
-    # Convert list of tuples into normal list
-    all_scores = list(np.ravel(results))
-
-    return jsonify(all_scores)
+    return jsonify(results)
 
 
 @app.route("/api/v1.0/stations")
@@ -72,21 +69,21 @@ def stations():
 def tobs():
     session = Session(engine)
 
-    results = session.query(Measurement.tobs).filter(Measurement.date >= year_ago).order_by(Measurement.date.desc()).all()
+    t_results = session.query(Measurement.date, Measurement.station, Measurement.tobs).filter(Measurement.date >= last_twelve_months).all()
 
     session.close()
 
-    return jsonify(results)
+    return jsonify(t_results)
 
 @app.route("/api/v1.0/<start>/<end>")
 def startDateEndDate(start,end):
     session = Session(enigne)
 
-    multi_day_temp_results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).filter(Measurement.date >= start).filter(Measurement.date <= end).all()
+    start_end_temp_results = session.query(func.min(Measurement.tobs), func.avg(Measurement.tobs), func.max(Measurement.tobs)).filter(Measurement.date >= start).filter(Measurement.date <= end).all()
 
     session.close()
 
-    return jsonify(multi_day_temp_results)
+    return jsonify(start_end_temp_results)
 
 if __name__ == "__main__":
     app.run(debug=True)
