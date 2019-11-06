@@ -68,9 +68,8 @@ data.forEach((sightingReport) => {
 
 var button = d3.select("#filter-btn");
 
-// filter for date
+// filter for date (you will have to data.pass because the data is a string)
 button.on("click", function() {
-    d3.event.preventDefault();
     var dateInput = d3.select("#datetime");
     var dateInputValue = dateInput.property("value");
     console.log(dateInputValue);
